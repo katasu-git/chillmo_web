@@ -1,16 +1,37 @@
 <template>
   <div id="app">
-    <Detail/>
+    <Detail v-if="router('detail')"/>
+    <UserProfile v-if="router('userProfile')"/>
   </div>
 </template>
 
 <script>
 import Detail from '@/components/Detail'
+import UserProfile from '@/components/UserProfile'
 
 export default {
   name: 'App',
+  data () {
+    return {
+      path: ''
+    }
+  },
+  created () {
+      const params = new URLSearchParams(decodeURIComponent(window.location.search.substring(1)))
+      this.path = params.get('path') // /?key=hogeでしていしたhogeを取得できる
+  },
+  methods: {
+    router (comp) {
+      if(this.path == comp) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
   components: {
-    Detail
+    Detail,
+    UserProfile
   }
 }
 </script>
@@ -43,6 +64,10 @@ html, body, #app {
     margin-top: 40px;
 }
 
+.mt50 {
+    margin-top: 50px;
+}
+
 .ml10 {
     margin-left: 10px;
 }
@@ -53,5 +78,11 @@ html, body, #app {
 
 .mb20 {
     padding-bottom: 20px;
+}
+
+.border {
+  height: 1px;
+  width: 100%;
+  background-color: #E5E5E5;
 }
 </style>

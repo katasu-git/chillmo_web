@@ -9,10 +9,11 @@ function writeUserLog() {
     $today = date('Y-m-d');
     $user_data = getUser($userId);
     $lastCheck = $user_data['last_check_date'];
+    $yesterday = date("Y-m-d", strtotime("-1 day"));
 
     if($user_data) {
         countUp($userId);
-        countupContinue($userId, $today, $lastCheck);
+        countupContinue($userId, $today, $yesterday, $lastCheck);
 
     } else {
         insertUser($userId, $today);
@@ -42,14 +43,23 @@ function countUp($userId) {
     $stmt->execute();
 }
 
-function countupContinue($userId, $today, $lastCheck) {
+function countupContinue($userId, $today, $yesterday, $lastCheck) {
     if($today == $lastCheck) {
         return;
     }
-    $pdo = connectMysql();
-    $sql = "UPDATE chillmo_user SET `check_continue` = check_continue + 1, `last_check_date` = $today WHERE line_user_id = '$userId'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    if($lastCheck == $yesterday) {
+        $pdo = connectMysql();
+        $sql = "UPDATE chillmo_user SET `check_continue` = check_continue + 1, `last_check_date` = $today WHERE line_user_id = '$userId'";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+    } else {
+        // 一日以上経っている場合はカウントをリセット
+        $pdo = connectMysql();
+        $sql = "UPDATE chillmo_user SET `check_continue` = 1, `last_check_date` = $today WHERE line_user_id = '$userId'";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+    }
+    
 }
 
 writeUserLog()
