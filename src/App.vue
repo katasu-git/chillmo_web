@@ -2,12 +2,14 @@
   <div id="app">
     <Detail v-if="router('detail')"/>
     <UserProfile v-if="router('userProfile')"/>
+    <Quiz v-if="router('quiz')"/>
   </div>
 </template>
 
 <script>
 import Detail from '@/components/Detail'
 import UserProfile from '@/components/UserProfile'
+import Quiz from '@/components/Quiz'
 
 export default {
   name: 'App',
@@ -31,7 +33,8 @@ export default {
   },
   components: {
     Detail,
-    UserProfile
+    UserProfile,
+    Quiz
   }
 }
 </script>
