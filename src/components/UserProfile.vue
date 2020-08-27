@@ -17,12 +17,12 @@
                 <div class="nums">
                     <div class="subtitle">累計</div>
                     <div class="mt10" />
-                    <span class="num">{{userLog.check_sum}}<span class="subtitle">件</span></span>
+                    <span class="num">{{getHalf(userLog.check_sum)}}<span class="subtitle">件</span></span>
                 </div>
                 <div class="nums">
                     <div class="subtitle">今週</div>
                     <div class="mt10" />
-                    <span class="num">{{userLog.check_weekly}}<span class="subtitle">件</span></span>
+                    <span class="num">{{getHalf(userLog.check_weekly)}}<span class="subtitle">件</span></span>
                 </div>
                 <div class="nums">
                     <div class="subtitle">連続</div>
@@ -111,6 +111,12 @@ export default {
                 }
             }
         })
+    },
+    getHalf (num) {
+        if(!num) {
+            return ''
+        }
+        return parseInt(num / 2, 10)
     }
   }
 }

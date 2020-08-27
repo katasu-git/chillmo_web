@@ -6,7 +6,7 @@ header("Access-Control-Allow-Origin: *"); //CORS回避
 
 function writeUserLog() {
     $userId = $_POST['userId'];
-    $today = date('Y-m-d');
+    $today = date("Y-m-d", strtotime("now"));
     $user_data = getUser($userId);
     $lastCheck = $user_data['last_check_date'];
     $yesterday = date("Y-m-d", strtotime("-1 day"));
@@ -49,13 +49,13 @@ function countupContinue($userId, $today, $yesterday, $lastCheck) {
     }
     if($lastCheck == $yesterday) {
         $pdo = connectMysql();
-        $sql = "UPDATE chillmo_user SET `check_continue` = check_continue + 1, `last_check_date` = $today WHERE line_user_id = '$userId'";
+        $sql = "UPDATE chillmo_user SET check_continue = check_continue + 1, last_check_date = '$today' WHERE line_user_id = '$userId'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
     } else {
         // 一日以上経っている場合はカウントをリセット
         $pdo = connectMysql();
-        $sql = "UPDATE chillmo_user SET `check_continue` = 1, `last_check_date` = $today WHERE line_user_id = '$userId'";
+        $sql = "UPDATE chillmo_user SET check_continue = 1, last_check_date = '$today' WHERE line_user_id = '$userId'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
     }
