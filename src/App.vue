@@ -1,11 +1,20 @@
 <template>
   <div id="app">
-    <Detail v-if="router('detail')"/>
+    <Detail 
+      v-if="router('detail')"
+      :rumorIdFromRank="rumorIdFromRank"
+      @setPath="setPath"
+    />
     <UserProfile 
       v-if="router('userProfile') || !path"
       @setPath="setPath"
     />
     <Quiz v-if="router('quiz')"/>
+    <Ranking 
+      v-if="router('ranking')"
+      @setId="setId"
+      @setPath="setPath"
+    />
   </div>
 </template>
 
@@ -13,12 +22,14 @@
 import Detail from '@/components/Detail'
 import UserProfile from '@/components/UserProfile'
 import Quiz from '@/components/Quiz'
+import Ranking from '@/components/Ranking'
 
 export default {
   name: 'App',
   data () {
     return {
-      path: ''
+      path: '',
+      rumorIdFromRank: "338"
     }
   },
   created () {
@@ -35,12 +46,17 @@ export default {
     },
     setPath (path) {
       this.path = path
+    },
+    setId (id) {
+      this.rumorIdFromRank = id
+      console.log(this.rumorIdFromRank)
     }
   },
   components: {
     Detail,
     UserProfile,
-    Quiz
+    Quiz,
+    Ranking
   }
 }
 </script>
@@ -56,6 +72,10 @@ html, body, #app {
   -moz-osx-font-smoothing: grayscale;
   background-color: #FAFAFA;
   overflow: scroll;
+}
+
+.mt5 {
+    margin-top: 5px;
 }
 
 .mt10 {

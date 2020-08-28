@@ -6,7 +6,7 @@ header("Access-Control-Allow-Origin: *"); //CORS回避
 function getRumors() {
     
     $pdo = connectMysql();
-    $sql = "SELECT * FROM rumors LIMIT 200";
+    $sql = "SELECT * FROM rumors ORDER BY fix DESC LIMIT 200";
     $stmt = $pdo -> query($sql);
     $result = array();
     foreach($stmt as $row) {

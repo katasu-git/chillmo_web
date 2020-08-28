@@ -2,6 +2,10 @@
   <div class="detail">
     <div class="inner">
         <div class="timestamp">
+            <div 
+                class="link"
+                @click="goToRanking()"
+            >< ランキング</div>
             <div class="text">発生確認日：{{rumorDetail.created_at}}</div>
         </div>
         <div class="mt10" />
@@ -42,6 +46,9 @@ import axios from 'axios'
 
 export default {
   name: 'Detail',
+  props: {
+      rumorIdFromRank: ''
+  },
   data () {
     return {
         rumorId: '',
@@ -64,6 +71,9 @@ export default {
     getRumorId () {
         const params = new URLSearchParams(decodeURIComponent(window.location.search.substring(1)))
         this.rumorId = params.get('id') // /?key=hogeでしていしたhogeを取得できる
+        if(this.rumorIdFromRank) {
+            this.rumorId = this.rumorIdFromRank
+        }
         console.log(this.rumorId)
     }, 
     submitCheckLog () {
@@ -107,6 +117,9 @@ export default {
             return "#4483BC"
         }
     },
+    goToRanking () {
+        this.$emit("setPath", "ranking")
+    }
   }
 }
 </script>
@@ -127,8 +140,17 @@ export default {
     width: calc(100% - 40px);
 }
 
-.text, .scale {
+.text, .scale, .link {
     font-size: 14px;
+}
+
+.link {
+    color: #3498CB;
+}
+
+.timestamp {
+    display: flex;
+    justify-content: space-between;
 }
 
 .content {
