@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <Detail v-if="router('detail')"/>
-    <UserProfile v-if="router('userProfile')"/>
+    <UserProfile 
+      v-if="router('userProfile') || !path"
+      @setPath="setPath"
+    />
     <Quiz v-if="router('quiz')"/>
   </div>
 </template>
@@ -29,6 +32,9 @@ export default {
       } else {
         return false;
       }
+    },
+    setPath (path) {
+      this.path = path
     }
   },
   components: {

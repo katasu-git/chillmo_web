@@ -366,6 +366,6 @@ p {
     text-align: center;
     font-weight: bold;
     font-size: 18px;
-    color: #07B53B;
+    color: #4483BC;
 }
 </style>

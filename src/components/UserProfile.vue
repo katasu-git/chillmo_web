@@ -46,12 +46,15 @@
                 <div class="nums">
                     <div class="subtitle">正答率</div>
                     <div class="mt10" />
-                    <span class="num">{{userLog.answer_correct}}<span class="subtitle">%</span></span>
+                    <span class="num">{{getCorrectPer()}}<span class="subtitle">%</span></span>
                 </div>
             </div>
         </div>
         <div class="mt50" />
-        <div class="button">クイズに挑戦する</div>
+        <div 
+            class="button"
+            @click="setPath()"
+        >クイズに挑戦する</div>
         <div class="mb20" />
     </div>
   </div>
@@ -72,13 +75,18 @@ export default {
     this.liffInit()
     liff.ready.then(() => {
         // do something you want when liff.init finishes
+        if(!this.checkLogIn()) {
+            liff.login();
+        }
         this.getUserProfile()
-        // this.getUserLog()
     })
   },
   methods: {
     liffInit () {
         liff.init({liffId: "1654776413-dpYy83Wb"})
+    },
+    checkLogIn  () {
+        return liff.isLoggedIn()
     },
     getUserProfile () {
         liff.getProfile()
@@ -117,7 +125,18 @@ export default {
             return ''
         }
         return parseInt(num / 2, 10)
-    }
+    },
+    setPath () {
+        this.$emit('setPath', 'quiz')
+    },
+    getCorrectPer () {
+        if(this.userLog) {
+            const per = (this.userLog.answer_correct / this.userLog.answer_sum) * 100
+            return parseInt(per, 10);
+        } else {
+            return ''
+        }
+    },
   }
 }
 </script>
