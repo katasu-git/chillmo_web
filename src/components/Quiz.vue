@@ -1,16 +1,74 @@
 <template>
   <div class="quiz">
+    <div class="header">
+        流言クイズ
+    </div>
+    <div class="mt30" />
+    <div class="mt30" />
+    <div class="mt10" />
     <div class="inner">
         <div v-if="!onAnswer">
-            <p>{{hideKeyword()}}</p>
-            <p>〇〇に入る言葉は何かな？</p>
-            <div 
-                v-for="h in hints" :key="h"
-                @click="submitAnswer(h)"
-            >{{h}}</div>
+            <div class="content">{{hideKeyword()}}</div>
+            <div class="mt20" />
+            <div class="component">
+                <img src="../assets/ghost.svg" class="ghost" />
+                <div class="ml20" />
+                <div class="message"> 〇〇に入る言葉は何かな？</div>
+            </div>
+            <div class="mt30" />
+            <div class="grid">
+                <div 
+                    class="buttonText"
+                    v-for="h in hints"
+                    @click="submitAnswer(h)"
+                >{{h}}</div>
+            </div>
         </div>
         <div v-else>
-            {{test}}
+            <div class="contentFill">{{nowRumor.content}}</div>
+            <div class="mt20" />
+            <div class="component">
+                <img src="../assets/ghost.svg" class="ghost" />
+                <div class="ml20" />
+                <div class="message">
+                    <div v-if="isCorrect">
+                        <p>おみごと！<span class="green">正解！</span></p>
+                        <p>{{correctMessage()}}</p>
+                    </div>
+                    <div v-else>残念！<span class="red">不正解...</span></div>
+                </div>
+            </div>
+            <div class="mt20" />
+            <div class="border" />
+            <div class="mt20" />
+            <div class="subComponent">
+                <div class="nums">
+                    <div class="subtitle">あなたの回答数</div>
+                    <div class="mt10" />
+                    <span class="num">{{answerData.answer_sum}}<span class="subtitle">件</span></span>
+                </div>
+                <div class="nums">
+                    <div class="subtitle">あなたの正答率</div>
+                    <div class="mt10" />
+                    <span class="num">{{getCorrectPer()}}<span class="subtitle">%</span></span>
+                </div>
+            </div>
+            <div class="mt20" />
+            <div class="border" />
+            <div class="mt20" />
+            <div
+                class="nextButton" 
+                @click="nextQuiz()"
+            >
+                次のクイズに挑戦
+            </div>
+            <div class="mt40" />
+            <div class="fix_tweets">
+                <div class="title">訂正ツイート</div>
+                <div class="mt10" />
+                <div class="text">{{nowRumor.fix_tweets}}</div>
+            </div>
+            <div class="mb20" />
         </div>
     </div>
   </div>
@@ -32,7 +90,7 @@ export default {
         onAnswer: false, // 回答は隠す
         isCorrect: false,
         userProfile: '',
-        test: ''
+        answerData: ''
     }
   },
   created () {
@@ -46,7 +104,7 @@ export default {
     liffInit () {
         liff.init({liffId: "1654776413-dpYy83Wb"})
     },
-    getAnswerData (isCorrect) {
+    getAnswerData () {
         liff.getProfile()
         .then((response) => {
             // this.userProfile = response //userId,displayName,pictureUrl,statusMessage
@@ -54,24 +112,31 @@ export default {
             const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getAnswerData.php"
             let params = new URLSearchParams();
             params.append("userId", userId)
-            params.append("isCorrect", isCorrect)
+            params.append("isCorrect", this.isCorrect)
             axios.post(url, params).then((res)=>{
-                this.test = res.data
-                return res.data
+                this.answerData = res.data
+                this.onAnswer = true
             })
         })
         .catch(error => {
             console.log(error)
         })
     },
+    getAnswerDataDummy () {
+        const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getAnswerData.php"
+        let params = new URLSearchParams();
+        params.append("userId", "Uf811de50a7725a63c181cf7fc8977ae7")
+        params.append("isCorrect", this.isCorrect)
+        axios.post(url, params).then((res)=>{
+            this.answerData = res.data
+            this.onAnswer = true
+        })
+    },
     async init () {
         const rumors = await this.getRumors()
         this.quizRumors = this.getRumorsForQuiz(rumors)
         this.max = this.quizRumors.length
-        this.setQuizRumor()
-        this.setHints()
-        // console.log(this.quizRumors)
-        // console.log(this.max)
+        this.nextQuiz()
     },
     async getRumors () {
         const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getRumors.php"
@@ -86,6 +151,7 @@ export default {
                 quizRumors.push(rumors[i])
             }
         }
+        quizRumors = this.shuffle(quizRumors)
         return quizRumors
     },
     setQuizRumor () {
@@ -134,14 +200,42 @@ export default {
     },
     submitAnswer (answer) {
         this.isCorrect = this.judgeAnswer(answer)
-        this.getAnswerData(this.isCorrect)
-        this.onAnswer = true
+        // this.getAnswerData()
+        this.getAnswerDataDummy()
+        
     },
     judgeAnswer (answer) {
         if(this.nowKeyword === answer) {
             return true
         } else {
             return false
+        }
+    },
+    getCorrectPer () {
+        const per = (this.answerData.answer_correct / this.answerData.answer_sum) * 100
+        return parseInt(per, 10);
+    },
+    nextQuiz () {
+        this.counter++
+        if(this.counter > this.max) {
+            this.counter = 0
+        }
+        this.setQuizRumor()
+        this.setHints()
+        this.onAnswer = false
+    },
+    correctMessage () {
+        const per = this.getCorrectPer()
+        if(per === 100) {
+            return "パーフェクト！君は流言マスターだね。"
+        } else if(per > 80) {
+            return "すごい正解率！その調子！"
+        } else if(per > 60) {
+            return "なかなかの正解率！"
+        } else if(per > 30) {
+            return "怪しい情報に騙されちゃだめだよ...！"
+        } else {
+            return "もしかして騙されやすい...？"
         }
     }
   }
@@ -158,17 +252,113 @@ p {
 .quiz {
     width: 100%;
     height: 100%;
-    color: #4B4B4B;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
+    color: #4B4B4B;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 40px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #07B53B;
+    color: #FFF;
+    border-bottom: solid 1px #FFF;
 }
 
 .inner {
     height: calc(100% - 40px);
     width: calc(100% - 40px);
+}
+
+.content, .contentFill {
+    background-color: #FFF;
+    border: solid 3px #07B53B;
+    color: #4b4b4b;
+    padding: 30px 10px;
+    border-radius: 3px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.contentFill {
+    background-color: #07B53B;
+    color: #FFF;
+}
+
+.component {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ghost {
+    width: 30px;
+}
+
+.message {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    grid-template-rows: 50px 50px;
+    grid-gap: 10px 5px;
+    
+    align-items: center;
+    text-align: center;
+}
+
+.buttonText {
+    font-size: 24px;
+    padding: 10px;
+    font-weight: bold;
+    background-color: #07B53B;
+    color: #FFF;
+    border-radius: 3px;
+}
+
+.subComponent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.nums {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 20px;
+}
+
+.subtitle {
+    font-size: 12px;
+}
+
+.num {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nextButton {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #07B53B;
 }
 </style>

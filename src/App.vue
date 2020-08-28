@@ -49,6 +49,7 @@ html, body, #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #FAFAFA;
+  overflow: scroll;
 }
 
 .mt10 {
@@ -75,6 +76,10 @@ html, body, #app {
     margin-left: 10px;
 }
 
+.ml20 {
+    margin-left: 20px;
+}
+
 .ml50 {
     margin-left: 50px;
 }
@@ -87,5 +92,13 @@ html, body, #app {
   height: 1px;
   width: 100%;
   background-color: #E5E5E5;
+}
+
+.red {
+  color: #FF5205;
+}
+
+.green {
+  color: #07B53B;
 }
 </style>
