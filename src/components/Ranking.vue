@@ -20,7 +20,7 @@
                     >{{r.content}}</div>
                     <div class="mt5" />
                     <div class="fixInfo">
-                        <span class="green">{{r.fix}}</span>人が訂正（昨日より{{addMark(r.updown)}}人）
+                        <span class="green">{{r.fix}}</span>人が訂正（昨日より<span :style="{color: updownColor(r.updown)}">{{addMark(r.updown)}}</span>人）
                     </div>
                 </div>
             </div>
@@ -66,6 +66,8 @@ export default {
     addMark (num) {
         if(num > 0) {
             return "+" + num
+        } else if (num == 0) {
+            return "±" + num
         } else {
             return num
         }
@@ -74,6 +76,15 @@ export default {
         console.log("発火")
         this.$emit("setId", id)
         this.$emit("setPath", "detail")
+    },
+    updownColor(num) {
+        if(num > 0) {
+            return "#07B53B"
+        } else if (num == 0) {
+            return "#4B4B4B"
+        } else {
+            return "#FF5205"
+        }
     }
   }
 }
@@ -138,6 +149,6 @@ p {
 }
 
 .fixInfo {
-    font-size: 12px;
+    font-size: 14px;
 }
 </style>

@@ -29,7 +29,7 @@ export default {
   data () {
     return {
       path: '',
-      rumorIdFromRank: "338"
+      rumorIdFromRank: ''
     }
   },
   created () {
