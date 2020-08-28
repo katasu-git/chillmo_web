@@ -174,9 +174,16 @@ export default {
     setHints () {
         const hintRumors = this.arrayRandom(this.quizRumors, 3)
         let hints = [this.nowKeyword]
-        for(let i=0; i<hintRumors.length; i++) {
-            hints.push(hintRumors[i].morpheme.split('/')[0])
+        for(let j=0;;j++) {
+            for(let i=0; i<hintRumors.length; i++) {
+                hints.push(hintRumors[i].morpheme.split('/')[0])
+            }
+            hints = hints.filter((x, k, self) => self.indexOf(x) === k); // 重複を削除
+            if(hints.length > 3) {
+                break
+            }
         }
+
         hints = this.shuffle(hints)
         this.hints = hints
         
