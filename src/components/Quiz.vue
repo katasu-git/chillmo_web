@@ -97,12 +97,18 @@ export default {
     this.liffInit()
     liff.ready.then(() => {
         // do something you want when liff.init finishes
+        if(!this.checkLogIn()) {
+            liff.login();
+        }
         this.init()
     })
   },
   methods: {
     liffInit () {
         liff.init({liffId: "1654776413-dpYy83Wb"})
+    },
+    checkLogIn  () {
+        return liff.isLoggedIn()
     },
     getAnswerData () {
         liff.getProfile()
