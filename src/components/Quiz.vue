@@ -200,8 +200,8 @@ export default {
     },
     submitAnswer (answer) {
         this.isCorrect = this.judgeAnswer(answer)
-        // this.getAnswerData()
-        this.getAnswerDataDummy()
+        this.getAnswerData()
+        // this.getAnswerDataDummy()
         
     },
     judgeAnswer (answer) {
