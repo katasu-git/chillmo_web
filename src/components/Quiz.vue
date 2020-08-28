@@ -226,6 +226,9 @@ export default {
         }
     },
     getCorrectPer () {
+        if(this.answerData.answer_sum == 0) {
+            return 0
+        }
         const per = (this.answerData.answer_correct / this.answerData.answer_sum) * 100
         return parseInt(per, 10);
     },

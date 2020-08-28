@@ -118,6 +118,9 @@ export default {
         this.$emit('setPath', 'quiz')
     },
     getCorrectPer () {
+        if(this.userLog.answer_sum == 0) {
+            return 0
+        }
         if(this.userLog) {
             const per = (this.userLog.answer_correct / this.userLog.answer_sum) * 100
             return parseInt(per, 10);
