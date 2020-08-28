@@ -53,7 +53,7 @@ function getAnswerData() {
         countUp($userId, $isCorrect);
 
     } else {
-        insertUser($user_data['line_user_id'], $isCorrect, $today);
+        insertUser($userId, $isCorrect, $today);
     }
 
     $result = getUser($userId);

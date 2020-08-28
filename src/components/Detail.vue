@@ -5,7 +5,7 @@
             <div 
                 class="link"
                 @click="goToRanking()"
-            >< ランキング</div>
+            >＜ ランキングへ</div>
             <div class="text">発生確認日：{{rumorDetail.created_at}}</div>
         </div>
         <div class="mt10" />

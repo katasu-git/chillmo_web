@@ -19,7 +19,8 @@
             <div class="grid">
                 <div 
                     class="buttonText"
-                    v-for="h in hints"
+                    v-for="(h,i) in hints"
+                    :key="i"
                     @click="submitAnswer(h)"
                 >{{h}}</div>
             </div>
@@ -372,6 +373,6 @@ p {
     text-align: center;
     font-weight: bold;
     font-size: 18px;
-    color: #4483BC;
+    color: #3498CB;
 }
 </style>

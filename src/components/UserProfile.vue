@@ -105,19 +105,7 @@ export default {
         axios.post(url, params)
         .then((response)=>{
             // console.log(response.data)
-            if(response.data[0]) {
-                this.userLog = response.data[0]
-            } else {
-                this.userLog = {
-                    "check_sum": 0,
-                    "check_weekly": 0,
-                    "check_continue": 0,
-                    "answer_sum": 0,
-                    "answer_correct": 0,
-                    "created_at": "0000-00-00",
-                    "last_check_date": "0000-00-00"
-                }
-            }
+            this.userLog = response.data[0]
         })
     },
     getHalf (num) {
@@ -216,7 +204,7 @@ export default {
 
 .button {
     width: 100%;
-    background-color: #07B53B;
+    background-color: #3498CB;
     color: #FFF;
     border-radius: 3px;
     height: 45px;
