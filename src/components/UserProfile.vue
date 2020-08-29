@@ -1,16 +1,14 @@
 <template>
   <div class="userProflie">
     <div class="header">
-        <div class="mt20" />
         <img class="userPicture" :src="userProfile.pictureUrl" />
         <div class="mt20" />
         <div class="userName">{{userProfile.displayName}}</div>
         <div class="createdAt">{{userLog.created_at}} から利用中</div>
-        <div class="mb20" />
     </div>
     <div v-if="userLog.group == 0" class="inner"><!--groupで機能を制限-->
         <div class="componet">
-            <div class="mt30" />
+            <div class="mt20" />
             <div class="title">流言のチェック</div>
             <div class="mt20" />
             <div class="subComponent">
@@ -27,7 +25,7 @@
                 <div class="nums">
                     <div class="subtitle">連続</div>
                     <div class="mt10" />
-                    <span class="num">{{userLog.check_continue}}<span class="subtitle">日</span></span>
+                    <span class="num"><span class="green">{{userLog.check_continue}}</span><span class="subtitle">日</span></span>
                 </div>
             </div>
         </div>
@@ -139,24 +137,23 @@ export default {
     width: 100%;
     height: 100%;
     color: #4B4B4B;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.inner {
-    height: calc(100% - 40px);
-    width: calc(100% - 40px);
 }
 
 .header {
     background-color: #07B53B;
     color: #FFF;
     width: 100%;
-    height: 240px;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
 .userPicture {
