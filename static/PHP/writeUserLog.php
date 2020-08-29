@@ -7,7 +7,7 @@ header("Access-Control-Allow-Origin: *"); //CORS回避
 function writeUserLog() {
     $userId = $_POST['userId'];
     $today = date("Y-m-d", strtotime("now"));
-    $user_data = getUser($userId);
+    $user_data = getUser($userId)[0];
     $lastCheck = $user_data['last_check_date'];
     $yesterday = date("Y-m-d", strtotime("-1 day"));
 

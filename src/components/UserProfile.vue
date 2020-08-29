@@ -8,7 +8,7 @@
         <div class="createdAt">{{userLog.created_at}} から利用中</div>
         <div class="mb20" />
     </div>
-    <div class="inner">
+    <div v-if="userLog.group == 0" class="inner"><!--groupで機能を制限-->
         <div class="componet">
             <div class="mt30" />
             <div class="title">流言のチェック</div>
@@ -106,6 +106,7 @@ export default {
         .then((response)=>{
             // console.log(response.data)
             this.userLog = response.data[0]
+            console.log(this.userLog)
         })
     },
     getHalf (num) {

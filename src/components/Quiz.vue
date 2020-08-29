@@ -153,9 +153,11 @@ export default {
     getRumorsForQuiz (rumors) {
         let quizRumors = []
         for(let i=0; i<rumors.length; i++) {
-            let morphemes = rumors[i].morpheme.split('/');
-            if(morphemes[0].length == 2) {
-                quizRumors.push(rumors[i])
+            if(rumors[i].morpheme) {
+                let morphemes = rumors[i].morpheme.split('/');
+                if(morphemes[0].length == 2) {
+                    quizRumors.push(rumors[i])
+                }
             }
         }
         quizRumors = this.shuffle(quizRumors)

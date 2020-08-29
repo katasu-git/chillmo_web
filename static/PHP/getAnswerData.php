@@ -1,8 +1,10 @@
 <?php
 ini_set('display_errors',1);
 require_once(dirname(__FILE__) . "/../PHP/connect_mysql.php");
+require_once(dirname(__FILE__) . "/../PHP/getUser.php");
 header("Access-Control-Allow-Origin: *"); //CORS回避
 
+/*
 function getUser($userId) {
     $pdo = connectMysql();
     $sql = "SELECT * FROM chillmo_user WHERE line_user_id='$userId'";
@@ -14,6 +16,7 @@ function getUser($userId) {
     }
     return $result[0];
 }
+*/
 
 function insertUser($userId, $isCorrect, $today) {
     $pdo = connectMysql();
@@ -46,7 +49,7 @@ function countUp($userId, $isCorrect) {
 function getAnswerData() {
     $userId = $_POST['userId'];
     $isCorrect = $_POST['isCorrect'];
-    $user_data = getUser($userId);
+    $user_data = getUser($userId)[0];
     $today = date("Y-m-d", strtotime("now"));
 
     if($user_data) {
@@ -56,7 +59,7 @@ function getAnswerData() {
         insertUser($userId, $isCorrect, $today);
     }
 
-    $result = getUser($userId);
+    $result = getUser($userId)[0];
     return $result;
 }
 
