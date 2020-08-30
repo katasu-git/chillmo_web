@@ -130,16 +130,6 @@ export default {
             console.log(error)
         })
     },
-    getAnswerDataDummy () {
-        const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getAnswerData.php"
-        let params = new URLSearchParams();
-        params.append("userId", "Uf811de50a7725a63c181cf7fc8977ae7")
-        params.append("isCorrect", this.isCorrect)
-        axios.post(url, params).then((res)=>{
-            this.answerData = res.data
-            this.onAnswer = true
-        })
-    },
     async init () {
         const rumors = await this.getRumors()
         this.quizRumors = this.getRumorsForQuiz(rumors)
@@ -218,7 +208,6 @@ export default {
     submitAnswer (answer) {
         this.isCorrect = this.judgeAnswer(answer)
         this.getAnswerData()
-        // this.getAnswerDataDummy()
         
     },
     judgeAnswer (answer) {
