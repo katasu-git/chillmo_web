@@ -84,6 +84,7 @@ export default {
                 const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/writeUserLog.php"
                 let params = new URLSearchParams()
                 params.append("userId", userId)
+                params.append("rumorId", this.rumorId)
                 axios.post(url, params)
             }
         })

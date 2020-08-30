@@ -46,7 +46,24 @@ function countUp($userId, $isCorrect) {
     $stmt->execute();
 }
 
+function writeAnswer($user_id, $rumorId, $isCorrect) {
+    
+    $pdo = connectMysql();
+    $stmt = $pdo -> prepare("INSERT INTO 
+    line_conversations (line_user_id, reply_action, user_message_type, user_message, reply_rumor) 
+    VALUES (:line_user_id, :reply_action, :user_message_type, :user_message, :reply_rumor)");
+    $stmt->bindValue(':line_user_id', $user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':reply_action', "answer-quiz", PDO::PARAM_STR);
+    $stmt->bindValue(':user_message_type', "", PDO::PARAM_STR);
+    $stmt->bindValue(':user_message', $isCorrect, PDO::PARAM_STR);
+    $stmt->bindValue(':reply_rumor', $rumorId, PDO::PARAM_STR);
+
+    $stmt->execute();
+
+}
+
 function getAnswerData() {
+    $rumorId = $_POST['rumorId'];
     $userId = $_POST['userId'];
     $isCorrect = $_POST['isCorrect'];
     $user_data = getUser($userId)[0];
@@ -58,6 +75,8 @@ function getAnswerData() {
     } else {
         insertUser($userId, $isCorrect, $today);
     }
+
+    writeAnswer($userId, $rumorId, $isCorrect); # 回答した問題を記録
 
     $result = getUser($userId)[0];
     return $result;

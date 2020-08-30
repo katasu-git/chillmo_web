@@ -6,7 +6,7 @@
         <div class="userName">{{userProfile.displayName}}</div>
         <div class="createdAt">{{userLog.created_at}} から利用中</div>
     </div>
-    <div v-if="userLog.group == 0" class="inner"><!--groupで機能を制限-->
+    <div v-if="userLog.test_group == 1" class="inner"><!--groupで機能を制限-->
         <div class="componet">
             <div class="mt20" />
             <div class="title">流言のチェック</div>
@@ -55,6 +55,32 @@
         >クイズに挑戦する</div>
         <div class="mb20" />
     </div>
+    <div
+        class="enquete"
+        v-if="userLog && !userLog.gender"
+    >
+        <div>【初回アンケート】</div>
+        <div>あなたは男性ですか？女性ですか？</div>
+        <div class="mt20" />
+        <div class="buttons">
+            <span 
+                class="button_man"
+                @click="()=>{this.gender = '男性'}"
+            >男性</span>
+            <span 
+                class="button_woman"
+                @click="()=>{this.gender = '女性'}"
+            >女性</span>
+        </div>
+        <div class="mt20" />
+        <div class="which_select">選択中：{{gender}}</div>
+        <div class="mt30" />
+        <div class="button" @click="submitGender()">回答を送信</div>
+    </div>
+    <div
+        class="enquete_done mt20" 
+        v-else
+    >アンケート回答済み：{{userLog.gender}}</div>
   </div>
 </template>
 
@@ -66,7 +92,8 @@ export default {
   data () {
     return {
         userProfile: JSON,
-        userLog: ''
+        userLog: '',
+        gender: '',
     }
   },
   created () {
@@ -111,7 +138,8 @@ export default {
         if(!num) {
             return ''
         }
-        return parseInt(num / 2, 10)
+        return Math.ceil(num) 
+        // return parseInt(num / 2, 10)
     },
     setPath () {
         this.$emit('setPath', 'quiz')
@@ -127,6 +155,20 @@ export default {
             return ''
         }
     },
+    submitGender() {
+        if(!this.gender) {
+            return
+        }
+        const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/submitGender.php"
+        let params = new URLSearchParams();
+        params.append("line_user_id", this.userProfile.userId)
+        params.append("gender", this.gender)
+        axios.post(url, params)
+        .then((response)=>{
+            this.userLog = response.data[0]
+            console.log(this.userLog)
+        })
+    }
   }
 }
 </script>
@@ -149,7 +191,7 @@ export default {
     align-items: center;
 }
 
-.inner {
+.inner, .enquete, .enquete_done {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +204,7 @@ export default {
     border-radius: 100%;
 }
 
-.userName {
+.userName, .which_select {
     font-size: 20px;
     font-weight: bold;
 }
@@ -213,5 +255,29 @@ export default {
     justify-content: center;
     align-items: center;
     font-weight: bold;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.button_man, .button_woman {
+    width: 50%;
+    background-color: #6AC0C8;
+    color: #FFF;
+    border-radius: 3px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    padding: 20px;
+    margin: 0px 10px;
+}
+
+.button_woman {
+    background-color: #EF7943;
 }
 </style>

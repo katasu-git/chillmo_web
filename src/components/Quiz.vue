@@ -119,6 +119,7 @@ export default {
             const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getAnswerData.php"
             let params = new URLSearchParams();
             params.append("userId", userId)
+            params.append("rumorId", this.nowRumor.id)
             params.append("isCorrect", this.isCorrect)
             axios.post(url, params).then((res)=>{
                 this.answerData = res.data

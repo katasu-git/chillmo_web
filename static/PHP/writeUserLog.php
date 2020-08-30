@@ -4,22 +4,6 @@ require_once(dirname(__FILE__) . "/../PHP/connect_mysql.php");
 require_once(dirname(__FILE__) . "/../PHP/getUser.php");
 header("Access-Control-Allow-Origin: *"); //CORS回避
 
-function writeUserLog() {
-    $userId = $_POST['userId'];
-    $today = date("Y-m-d", strtotime("now"));
-    $user_data = getUser($userId)[0];
-    $lastCheck = $user_data['last_check_date'];
-    $yesterday = date("Y-m-d", strtotime("-1 day"));
-
-    if($user_data) {
-        countUp($userId);
-        countupContinue($userId, $today, $yesterday, $lastCheck);
-
-    } else {
-        insertUser($userId, $today);
-    }
-}
-
 function insertUser($userId, $today) {
     $pdo = connectMysql();
     $stmt = $pdo -> prepare("INSERT INTO 
@@ -60,6 +44,40 @@ function countupContinue($userId, $today, $yesterday, $lastCheck) {
         $stmt->execute();
     }
     
+}
+
+function writeConversations($user_id, $rumorId) {
+    
+    $pdo = connectMysql();
+    $stmt = $pdo -> prepare("INSERT INTO 
+    line_conversations (line_user_id, reply_action, user_message_type, user_message, reply_rumor) 
+    VALUES (:line_user_id, :reply_action, :user_message_type, :user_message, :reply_rumor)");
+    $stmt->bindValue(':line_user_id', $user_id, PDO::PARAM_STR);
+    $stmt->bindValue(':reply_action', "click-detail-link", PDO::PARAM_STR);
+    $stmt->bindValue(':user_message_type', "", PDO::PARAM_STR);
+    $stmt->bindValue(':user_message', "", PDO::PARAM_STR);
+    $stmt->bindValue(':reply_rumor', $rumorId, PDO::PARAM_STR);
+
+    $stmt->execute();
+
+}
+
+function writeUserLog() {
+    $rumorId = $_POST['rumorId'];
+    $userId = $_POST['userId'];
+    $today = date("Y-m-d", strtotime("now"));
+    $user_data = getUser($userId)[0];
+    $lastCheck = $user_data['last_check_date'];
+    $yesterday = date("Y-m-d", strtotime("-1 day"));
+
+    if($user_data) {
+        countUp($userId);
+        countupContinue($userId, $today, $yesterday, $lastCheck);
+
+    } else {
+        insertUser($userId, $today);
+    }
+    writeConversations($userId, $rumorId);
 }
 
 writeUserLog()
