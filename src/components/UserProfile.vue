@@ -53,7 +53,6 @@
             class="button"
             @click="setPath()"
         >クイズに挑戦する</div>
-        <div class="mb20" />
     </div>
     <div
         class="enquete"
@@ -91,8 +90,8 @@ export default {
   name: 'UserProfile',
   data () {
     return {
-        userProfile: JSON,
-        userLog: JSON,
+        userProfile: '',
+        userLog: '',
         gender: '',
     }
   },

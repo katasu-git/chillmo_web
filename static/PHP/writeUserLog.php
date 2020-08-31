@@ -50,12 +50,10 @@ function writeConversations($user_id, $rumorId) {
     
     $pdo = connectMysql();
     $stmt = $pdo -> prepare("INSERT INTO 
-    line_conversations (line_user_id, reply_action, user_message_type, user_message, reply_rumor) 
-    VALUES (:line_user_id, :reply_action, :user_message_type, :user_message, :reply_rumor)");
+    line_conversations (line_user_id, reply_action, reply_rumor) 
+    VALUES (:line_user_id, :reply_action, :reply_rumor)");
     $stmt->bindValue(':line_user_id', $user_id, PDO::PARAM_STR);
     $stmt->bindValue(':reply_action', "click-detail-link", PDO::PARAM_STR);
-    $stmt->bindValue(':user_message_type', "", PDO::PARAM_STR);
-    $stmt->bindValue(':user_message', "", PDO::PARAM_STR);
     $stmt->bindValue(':reply_rumor', $rumorId, PDO::PARAM_STR);
 
     $stmt->execute();

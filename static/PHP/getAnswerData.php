@@ -27,11 +27,10 @@ function countUp($userId, $isCorrect, $pdo) {
 function writeAnswer($userId, $rumorId, $isCorrect, $pdo) {
     # $pdo = connectMysql();
     $stmt = $pdo -> prepare("INSERT INTO 
-    line_conversations (line_user_id, reply_action, user_message_type, user_message, reply_rumor) 
-    VALUES (:line_user_id, :reply_action, :user_message_type, :user_message, :reply_rumor)");
+    line_conversations (line_user_id, reply_action, user_message, reply_rumor) 
+    VALUES (:line_user_id, :reply_action, :user_message, :reply_rumor)");
     $stmt->bindValue(':line_user_id', $userId, PDO::PARAM_STR);
     $stmt->bindValue(':reply_action', "answer-quiz", PDO::PARAM_STR);
-    $stmt->bindValue(':user_message_type', "", PDO::PARAM_STR);
     $stmt->bindValue(':user_message', $isCorrect, PDO::PARAM_STR);
     $stmt->bindValue(':reply_rumor', $rumorId, PDO::PARAM_STR);
     $stmt->execute();
