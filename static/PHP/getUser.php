@@ -12,7 +12,8 @@ function getUser($userId) {
         $user_info = array('id' => $row['id'], 'line_user_id' => $row['line_user_id'], 'check_sum' => $row['check_sum'], 
         'check_weekly' => $row['check_weekly'], 'check_continue' => $row['check_continue'], 'answer_sum' => $row['answer_sum'], 
         'answer_correct' => $row['answer_correct'], 'created_at' => $row['created_at'], 'last_check_date' => $row['last_check_date'],
-        'gender' => $row['gender'], 'test_group' => $row['test_group'], 'answer_today' => $row['answer_today'], 'last_answer_date' => $row['last_answer_date']);
+        'gender' => $row['gender'], 'test_group' => $row['test_group'], 'answer_today' => $row['answer_today'], 'last_answer_date' => $row['last_answer_date'],
+        'answer_correct_today' => $row['answer_correct_today']);
         array_push($result, $user_info);
     }
     return $result;

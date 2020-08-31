@@ -6,7 +6,10 @@
     <div class="mt30" />
     <div class="mt30" />
     <div class="mt10" />
-    <div class="inner">
+    <div
+        v-if="!endFlag" 
+        class="inner"
+    >
         <div v-if="!onAnswer">
             <div class="content">{{hideKeyword()}}</div>
             <div class="mt20" />
@@ -44,14 +47,14 @@
             <div class="mt20" />
             <div class="subComponent">
                 <div class="nums">
-                    <div class="subtitle">あなたの回答数</div>
+                    <div class="subtitle">今日の回答数</div>
                     <div class="mt10" />
-                    <span class="num">{{answerData.answer_sum}}<span class="subtitle">件</span></span>
+                    <span class="num">{{userProfile.answer_today}}/10<span class="subtitle">件</span></span>
                 </div>
                 <div class="nums">
-                    <div class="subtitle">あなたの正答率</div>
+                    <div class="subtitle">今日の正答率</div>
                     <div class="mt10" />
-                    <span class="num">{{getCorrectPer()}}<span class="subtitle">%</span></span>
+                    <span class="num">{{getCorrectPer(userProfile.answer_today, userProfile.answer_correct_today)}}<span class="subtitle">%</span></span>
                 </div>
             </div>
             <div class="mt20" />
@@ -72,6 +75,21 @@
             <div class="mb20" />
         </div>
     </div>
+    <div v-else>
+        <div class="subComponent">
+            <div class="nums">
+                <div class="subtitle">今日の回答数</div>
+                <div class="mt10" />
+                <span class="num">{{userProfile.answer_today}}/10<span class="subtitle">件</span></span>
+            </div>
+            <div class="nums">
+                <div class="subtitle">今日の正答率</div>
+                <div class="mt10" />
+                <span class="num">{{getCorrectPer(userProfile.answer_today, userProfile.answer_correct_today)}}<span class="subtitle">%</span></span>
+            </div>
+        </div>
+        <div class="">また明日挑戦してね！</div>
+    </div>
   </div>
 </template>
 
@@ -91,7 +109,7 @@ export default {
         onAnswer: false, // 回答は隠す
         isCorrect: false,
         userProfile: '',
-        answerData: ''
+        endFlag: false
     }
   },
   created () {
@@ -111,6 +129,26 @@ export default {
     checkLogIn  () {
         return liff.isLoggedIn()
     },
+    getUserProfile () {
+        liff.getProfile()
+        .then((response) => {
+            const userId = response.userId
+            const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getUserLog.php"
+            let params = new URLSearchParams();
+            params.append("line_user_id", userId)
+            axios.post(url, params)
+            .then((response)=>{
+                this.userProfile =  response.data[0]
+                if(this.userProfile.answer_today > 9) {
+                    this.endFlag = true
+                }
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+        
+    },
     getAnswerData () {
         liff.getProfile()
         .then((response) => {
@@ -122,8 +160,7 @@ export default {
             params.append("rumorId", this.nowRumor.id)
             params.append("isCorrect", this.isCorrect)
             axios.post(url, params).then((res)=>{
-                this.answerData = res.data
-                console.log(res.data)
+                this.userProfile = res.data
                 this.onAnswer = true
             })
         })
@@ -132,6 +169,7 @@ export default {
         })
     },
     async init () {
+        await this.getUserProfile()
         const rumors = await this.getRumors()
         this.quizRumors = this.getRumorsForQuiz(rumors)
         this.max = this.quizRumors.length
@@ -218,14 +256,17 @@ export default {
             return false
         }
     },
-    getCorrectPer () {
-        if(this.answerData.answer_sum == 0) {
+    getCorrectPer (sum, correct) {
+        if(sum == 0) {
             return 0
         }
-        const per = (this.answerData.answer_correct / this.answerData.answer_sum) * 100
+        const per = (correct / sum) * 100
         return parseInt(per, 10);
     },
     nextQuiz () {
+        if(this.userProfile.answer_today > 9) {
+            this.endFlag = true
+        }
         this.counter++
         if(this.counter > this.max) {
             this.counter = 0
@@ -235,7 +276,7 @@ export default {
         this.onAnswer = false
     },
     correctMessage () {
-        const per = this.getCorrectPer()
+        const per = this.getCorrectPer(this.userProfile.answer_today, this.userProfile.answer_correct_today)
         if(per === 100) {
             return "パーフェクト！君は流言マスターだね。"
         } else if(per > 80) {

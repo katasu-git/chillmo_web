@@ -15,7 +15,7 @@ function resetTodayAnswer($userId, $today) {
 function countUp($userId, $isCorrect) {
     $pdo = connectMysql();
     if($isCorrect == "true") {
-        $sql = "UPDATE chillmo_user SET answer_sum = answer_sum + 1, answer_correct = answer_correct + 1, answer_today = answer_today + 1 WHERE line_user_id = '$userId'";
+        $sql = "UPDATE chillmo_user SET answer_sum = answer_sum + 1, answer_correct = answer_correct + 1, answer_today = answer_today + 1, answer_correct_today = answer_correct_today + 1 WHERE line_user_id = '$userId'";
     } else {
         $sql = "UPDATE chillmo_user SET answer_sum = answer_sum + 1, answer_today = answer_today + 1 WHERE line_user_id = '$userId'";
     }
