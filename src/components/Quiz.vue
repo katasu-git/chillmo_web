@@ -123,6 +123,7 @@ export default {
             params.append("isCorrect", this.isCorrect)
             axios.post(url, params).then((res)=>{
                 this.answerData = res.data
+                console.log(res.data)
                 this.onAnswer = true
             })
         })
