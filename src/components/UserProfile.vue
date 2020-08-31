@@ -6,7 +6,7 @@
         <div class="userName">{{userProfile.displayName}}</div>
         <div class="createdAt">{{userLog.created_at}} から利用中</div>
     </div>
-    <div v-if="userLog.test_group == 1" class="inner"><!--groupで機能を制限-->
+    <div v-if="userLog.test_group == 1 || userLog.test_group == 2" class="inner"><!--groupで機能を制限-->
         <div class="componet">
             <div class="mt20" />
             <div class="title">流言のチェック</div>
