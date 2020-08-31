@@ -92,7 +92,7 @@ export default {
   data () {
     return {
         userProfile: JSON,
-        userLog: '',
+        userLog: JSON,
         gender: '',
     }
   },
@@ -129,9 +129,7 @@ export default {
         params.append("line_user_id", this.userProfile.userId)
         axios.post(url, params)
         .then((response)=>{
-            // console.log(response.data)
             this.userLog = response.data[0]
-            console.log(this.userLog)
         })
     },
     getHalf (num) {
@@ -142,7 +140,27 @@ export default {
         // return parseInt(num / 2, 10)
     },
     setPath () {
-        this.$emit('setPath', 'quiz')
+        if(this.checkEnd()) {
+            this.$emit('setPath', 'quizEnd')
+        } else {
+            this.$emit('setPath', 'quiz')
+        }
+    },
+    checkEnd () {
+        console.log(this.userLog.answer_today > 9 && this.getNowYMD() == this.userLog.last_answer_date)
+        if(this.userLog.answer_today > 9 && this.getNowYMD() == this.userLog.last_answer_date) {
+            return true
+        } else {
+            return false
+        }
+    },
+    getNowYMD(){
+        var dt = new Date();
+        var y = dt.getFullYear();
+        var m = ("00" + (dt.getMonth()+1)).slice(-2);
+        var d = ("00" + dt.getDate()).slice(-2);
+        var result = y + "-" + m + "-" + d;
+        return result;
     },
     getCorrectPer () {
         if(this.userLog.answer_sum == 0) {
@@ -166,7 +184,6 @@ export default {
         axios.post(url, params)
         .then((response)=>{
             this.userLog = response.data[0]
-            console.log(this.userLog)
         })
     }
   }

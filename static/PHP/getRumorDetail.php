@@ -8,13 +8,8 @@ function getRumorDetail() {
 
     $pdo = connectMysql();
     $sql = "SELECT * FROM rumors WHERE id=$rumorId";
-    $stmt = $pdo -> query($sql);
-    $result = array();
-    foreach($stmt as $row) {
-        $rumorDetail = array('id' => $row['id'], 'content' => $row['content'], 'fix' => $row['fix'], 'fix_tweets' => $row['fix_tweets'], 'morpheme' => $row['morpheme'], 'updown' => $row['updown'], 'created_at' => $row['created_at']);
-        array_push($result, $rumorDetail);
-    }
-    return $result;
+    $stmt = $pdo -> query($sql) -> fetchAll();
+    return $stmt;
 }
 echo json_encode(getRumorDetail());
 

@@ -9,7 +9,13 @@
       v-if="router('userProfile') || !path"
       @setPath="setPath"
     />
-    <Quiz v-if="router('quiz')"/>
+    <Quiz 
+      v-if="router('quiz')"
+      @setPath="setPath"
+    />
+    <QuizEnd 
+      v-if="router('quizEnd')"
+    />
     <Ranking 
       v-if="router('ranking')"
       @setId="setId"
@@ -22,6 +28,7 @@
 import Detail from '@/components/Detail'
 import UserProfile from '@/components/UserProfile'
 import Quiz from '@/components/Quiz'
+import QuizEnd from '@/components/QuizEnd'
 import Ranking from '@/components/Ranking'
 
 export default {
@@ -56,6 +63,7 @@ export default {
     Detail,
     UserProfile,
     Quiz,
+    QuizEnd,
     Ranking
   }
 }

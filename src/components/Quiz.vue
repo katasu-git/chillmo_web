@@ -6,11 +6,8 @@
     <div class="mt30" />
     <div class="mt30" />
     <div class="mt10" />
-    <div
-        v-if="!endFlag" 
-        class="inner"
-    >
-        <div v-if="!onAnswer">
+    <div class="inner">
+        <div v-show="!onAnswer">
             <div class="content">{{hideKeyword()}}</div>
             <div class="mt20" />
             <div class="component">
@@ -28,7 +25,7 @@
                 >{{h}}</div>
             </div>
         </div>
-        <div v-else>
+        <div v-show="onAnswer">
             <div class="contentFill">{{nowRumor.content}}</div>
             <div class="mt20" />
             <div class="component">
@@ -75,21 +72,6 @@
             <div class="mb20" />
         </div>
     </div>
-    <div v-else>
-        <div class="subComponent">
-            <div class="nums">
-                <div class="subtitle">今日の回答数</div>
-                <div class="mt10" />
-                <span class="num">{{userProfile.answer_today}}/10<span class="subtitle">件</span></span>
-            </div>
-            <div class="nums">
-                <div class="subtitle">今日の正答率</div>
-                <div class="mt10" />
-                <span class="num">{{getCorrectPer(userProfile.answer_today, userProfile.answer_correct_today)}}<span class="subtitle">%</span></span>
-            </div>
-        </div>
-        <div class="">また明日挑戦してね！</div>
-    </div>
   </div>
 </template>
 
@@ -105,11 +87,10 @@ export default {
         nowKeyword: '',
         hints: [],
         counter: 0,
-        max: 0,
         onAnswer: false, // 回答は隠す
         isCorrect: false,
         userProfile: '',
-        endFlag: false
+        userId: '',
     }
   },
   created () {
@@ -129,51 +110,53 @@ export default {
     checkLogIn  () {
         return liff.isLoggedIn()
     },
+    async init () {
+        this.getUserProfile()
+        const rumors = await this.getRumors()
+        this.quizRumors = this.getRumorsForQuiz(rumors)
+        this.nextQuiz()
+    },
     getUserProfile () {
         liff.getProfile()
         .then((response) => {
-            const userId = response.userId
+            this.userId= response.userId
             const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getUserLog.php"
             let params = new URLSearchParams();
-            params.append("line_user_id", userId)
+            params.append("line_user_id", this.userId)
             axios.post(url, params)
             .then((response)=>{
-                this.userProfile =  response.data[0]
-                if(this.userProfile.answer_today > 9) {
-                    this.endFlag = true
-                }
+                this.userProfile = response.data[0]
+                this.checkEnd()
             })
         })
         .catch(error => {
             console.log(error)
         })
-        
     },
     getAnswerData () {
-        liff.getProfile()
-        .then((response) => {
-            // this.userProfile = response //userId,displayName,pictureUrl,statusMessage
-            const userId = response.userId
             const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getAnswerData.php"
             let params = new URLSearchParams();
-            params.append("userId", userId)
+            params.append("userId", this.userId)
             params.append("rumorId", this.nowRumor.id)
             params.append("isCorrect", this.isCorrect)
             axios.post(url, params).then((res)=>{
                 this.userProfile = res.data
+                this.checkEnd()
                 this.onAnswer = true
             })
-        })
-        .catch(error => {
-            console.log(error)
-        })
     },
-    async init () {
-        await this.getUserProfile()
-        const rumors = await this.getRumors()
-        this.quizRumors = this.getRumorsForQuiz(rumors)
-        this.max = this.quizRumors.length
-        this.nextQuiz()
+    checkEnd () {
+        if(this.userProfile.answer_today > 9 && this.getNowYMD() == this.userProfile.last_answer_date) {
+            this.$emit('setPath', 'quizEnd')
+        }
+    },
+    getNowYMD(){
+        var dt = new Date();
+        var y = dt.getFullYear();
+        var m = ("00" + (dt.getMonth()+1)).slice(-2);
+        var d = ("00" + dt.getDate()).slice(-2);
+        var result = y + "-" + m + "-" + d;
+        return result;
     },
     async getRumors () {
         const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getRumors.php"
@@ -264,13 +247,7 @@ export default {
         return parseInt(per, 10);
     },
     nextQuiz () {
-        if(this.userProfile.answer_today > 9) {
-            this.endFlag = true
-        }
         this.counter++
-        if(this.counter > this.max) {
-            this.counter = 0
-        }
         this.setQuizRumor()
         this.setHints()
         this.onAnswer = false
