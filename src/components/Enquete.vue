@@ -53,9 +53,10 @@
 
             <div class="mt30" />
             <button @click="setCounter()" v-scroll-to="'#top'">次の質問へ</button>
+            <div class="mt40" />
         </div>
         <div class="end_message" v-else>
-            <div class="mt40" />
+            <div class="mt20" />
             <img src="../assets/ghost.svg" class="ghost" />
             <div class="mt20" />
             <div>アンケートは以上です</div>
