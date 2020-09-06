@@ -1,0 +1,170 @@
+[
+    {
+        "mainText": "システムの利⽤期間，⽇ごろ⽬にする情報を疑うことが増えた",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "システムの利⽤期間，⽇ごろ⽬にする情報の真偽を確認することが増えた",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "システムの利⽤期間，情報の信頼性への関⼼が⾼まった",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流言の詳細情報のち「訂正数」は，情報の確認をする上で重要だと思う",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流言の詳細情報のち「訂正数の増減」は，情報の確認をする上で重要だと思う",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流言の詳細情報のち「訂正ツイート」は，情報の確認をする上で重要だと思う",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流言の詳細情報のち「発⽣⽇」は，情報の確認をする上で重要だと思う",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流⾔の通知によって，⽇ごろ⽬にする情報を疑うことが増えた",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流⾔の通知は，システム利⽤のきっかけになった",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "流⾔の通知をどの程度⾒ていたか",
+        "selecters" : ["全て見た", "5~6回見た", "3~4回見た", "1~2回見た", "全く見なかった"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "false"
+    },
+    {
+        "mainText": "流⾔の通知頻度について",
+        "selecters" : ["非常に多い", "多い", "適切", "少ない", "非常に少ない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "false"
+    },
+    {
+        "mainText": "どれくらいの頻度で通知を⾏ってほしいか",
+        "selecters" : [],
+        "type": "",
+        "model": "",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「最新の流⾔を表⽰」する機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「注目・急上昇の流⾔を表⽰」する機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「ランキングを表⽰」する機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「話しかけて流⾔を確認」する機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「流言を通知」する機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "「流⾔の詳細情報」の機能は，システムを継続して使う上で必要である",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "システムを継続して使いたい",
+        "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
+        "type": "radio",
+        "model": "selectData",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "システムの良かった点を記述してください",
+        "selecters" : [],
+        "type": "",
+        "model": "",
+        "image_path": "",
+        "reason": "true"
+    },
+    {
+        "mainText": "追加でほしい機能があれば記述してください",
+        "selecters" : [],
+        "type": "",
+        "model": "",
+        "image_path": "",
+        "reason": "true"
+    }
+]

@@ -1,7 +1,7 @@
 <template>
   <div class="enquete">
         <div class="header" id="top">アンケート</div>
-        <div class="inner">
+        <div v-if="!qEnd" class="inner">
             
             <div class="mt20" />
             <div class="progress">
@@ -17,7 +17,7 @@
 
             <div class="mt20" />
             <div class="span">
-                <div class="bold">Q.{{counter + 1}}</div>
+                <div class="bold">Q{{counter + 1}}.</div>
                 <div class="bold ml20">{{questionJSON[counter].mainText}}</div>
             </div>
 
@@ -43,49 +43,50 @@
             </form>
 
             <div class="mt20" />
-            <div class="bold" v-show="questionJSON[counter].type">理由：</div>
-            <textarea class="input_text" wrap="soft" v-model="reason"></textarea>
+            <div v-show="questionJSON[counter].reason == 'true'">
+                <div 
+                    class="bold" 
+                    v-show="questionJSON[counter].type"
+                >理由：</div>
+                <textarea class="input_text" wrap="soft" v-model="reason"></textarea>
+            </div>
 
             <div class="mt30" />
             <button @click="setCounter()" v-scroll-to="'#top'">次の質問へ</button>
+        </div>
+        <div class="end_message" v-else>
+            <div class="mt40" />
+            <img src="../assets/ghost.svg" class="ghost" />
+            <div class="mt20" />
+            <div>アンケートは以上です</div>
+            <div>ご協力ありがとうございました！</div>
         </div>
   </div>
 </template>
 
 <script>
-// import Question from '@/components/Question'
+import axios from 'axios'
 
 export default {
   name: 'enquete',
   data () {
     return {
+        userId: '',
         counter: 0,
         questionJSON: [
             {
-                "mainText": "システムの利⽤期間，⽇ごろ⽬にする情報の真偽を確認することが増えた",
-                "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
-                "type": "radio",
-                "model": "selectData",
-                "image_path": require("../assets/image.jpeg")
-            },
-            {
-                "mainText": "システムを継続して使う助けになる機能",
-                "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
-                "type": "checkbox",
-                "model": "checkData",
-                "image_path": ""
-            },
-            {
-                "mainText": "どれくらいの頻度で通知を⾏ってほしいか",
+                "mainText": "",
                 "selecters" : [],
                 "type": "",
                 "model": "",
-                "image_path": ""
+                "image_path": "",
+                "reason": "true"
             }
         ],
         selectData: [],
         reason: '',
-        error: false
+        error: false,
+        qEnd: false
     }
   },
   created () { 
@@ -93,8 +94,9 @@ export default {
         liff.ready.then(() => {
             // do something you want when liff.init finishes
             if(!this.checkLogIn()) {
-                // liff.login();
+                liff.login();
             }
+            this.getUserId()
         })
   },
   methods: {
@@ -104,23 +106,53 @@ export default {
     checkLogIn  () {
         return liff.isLoggedIn()
     },
+    getUserId () {
+        liff.getProfile()
+        .then((response) => {
+            this.userId= response.userId
+            const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/getUserLog.php"
+            let params = new URLSearchParams();
+            params.append("line_user_id", this.userId)
+            axios.post(url, params)
+            .then(res=>{
+                console.log(res)
+                if(res.data[0].test_group == 0) {
+                    axios.get("https://www2.yoslab.net/~nishimura/chillmoWeb/static/question_g0.json").then(res=>{
+                        this.questionJSON = res.data
+                        console.log(res.data)
+                    })
+
+                } else if(res.data[0].test_group == 1 || res.data[0].test_group == 2) {
+                    axios.get("https://www2.yoslab.net/~nishimura/chillmoWeb/static/question_g1.json").then(res=>{
+                        this.questionJSON = res.data
+                        console.log(res.data)
+                    })
+                }
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    },
     setCounter () {
-        console.log(this.selectData)
-        console.log(this.reason)
-        if((this.questionJSON[this.counter].type && this.selectData.length == 0) || !this.reason) {
+        if((this.questionJSON[this.counter].type && this.selectData.length == 0) 
+            || (this.questionJSON[this.counter].reason == "true" && !this.reason)) {
+
             this.error = true
             return
+            
         }
-        if(this.counter + 2 > this.questionJSON.length) {
-            // 終了処理
-            this.counter = 0
-        } else {
-            this.counter++
-        }
+        this.submitQAnswerDB()
         // 初期化
         this.selectData = []
         this.reason = ''
         this.error = false
+        if(this.counter + 2 > this.questionJSON.length) {
+            // 終了処理
+            this.qEnd = true
+        } else {
+            this.counter++
+        }
     },
     progressWidth () {
         const par = this.counter / this.questionJSON.length * 100
@@ -128,6 +160,31 @@ export default {
     },
     qLeft () {
         return this.questionJSON.length - this.counter
+    },
+    async submitQAnswerDB () {
+        const url = "https://www2.yoslab.net/~nishimura/chillmoWeb/static/PHP/submitQAnswerDB.php"
+        let params = new URLSearchParams();
+        let dataStr = ""
+        if(this.selectData) {
+            if(this.questionJSON[this.counter].type == "radio") {
+                dataStr = this.selectData
+            } else {
+                for(let i=0; i<this.selectData.length; i++) {
+                    dataStr += this.selectData[i]
+                    if(i < this.selectData.length - 1) {
+                        dataStr += "/"
+                    }
+                }
+            }
+            params.append("dataStr", dataStr)
+        }
+        if(this.reason != '') {
+            params.append("reason", this.reason)
+        }
+        params.append("userId", this.userId)
+        params.append("Qnum", (this.counter + 1))
+        const res = await axios.post(url, params)
+        console.log(res)
     }
   }
 }
@@ -142,7 +199,7 @@ export default {
     justify-content: center;
     align-items: center;
     color: #4B4B4B;
-    font-size: 14px;
+    font-size: 18px;
     overflow: scroll;
 }
 
@@ -169,7 +226,7 @@ export default {
 }
 
 .mainText {
-    margin-top: -2px;
+    margin-top: -5px;
 }
 
 .mainImage {
@@ -183,6 +240,7 @@ export default {
 input, textarea {
     margin: 0;
     padding: 0;
+    font-size: 18px;
 }
 
 .input_text {
@@ -190,6 +248,7 @@ input, textarea {
     height: 60px;
     border: solid rgba(0,0,0,.12) 1px;
     border-radius: 3px;
+    font-size: 18px;
 }
 
 button {
@@ -197,19 +256,22 @@ button {
     border: none;
     background: none;
     font-weight: bold;
-    font-size: 18px;
     color: #3498CB;
+    font-size: 18px;
 }
 
 .progress {
-    height: 20px;
+    height: 40px;
     position: relative;
 }
 
 .indexTop {
     position: absolute;
+    height: 40px;
     width: 100%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: bold;
     color: #FFF;
 }
@@ -217,7 +279,7 @@ button {
 .bar-background, .bar-top {
     position: absolute;
     width: 100%;
-    height: 20px;
+    height: 40px;
     border-radius: 10px;
     background-color: rgba(0,0,0,.12);
 }
@@ -232,8 +294,19 @@ button {
     font-weight: bold;
     text-align: center;
     color: #EF7943;
-    font-size: 16px;
     
+}
+
+.end_message {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ghost {
+    width: 100px;
 }
 
 </style>

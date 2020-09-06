@@ -105,6 +105,7 @@ p {
     justify-content: center;
     align-items: center;
     color: #4B4B4B;
+    overflow: scroll;
 }
 
 .header {

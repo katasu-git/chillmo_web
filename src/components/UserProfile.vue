@@ -54,6 +54,14 @@
             @click="setPath()"
         >クイズに挑戦する</div>
     </div>
+
+    <div class="mt20" />
+    <div 
+        v-if="userLog.test_group == 2"
+        class="button button_enqete ml20"
+        @click="setPath('enquete')"
+    >アンケートに回答</div>
+
     <div
         class="enquete"
         v-if="userLog && !userLog.gender"
@@ -138,7 +146,11 @@ export default {
         return Math.ceil(num) 
         // return parseInt(num / 2, 10)
     },
-    setPath () {
+    setPath (path) {
+        if(path == "enquete") {
+            this.$emit('setPath', 'enquete')
+            return
+        }
         if(this.checkEnd()) {
             this.$emit('setPath', 'quizEnd')
         } else {
@@ -195,6 +207,7 @@ export default {
     width: 100%;
     height: 100%;
     color: #4B4B4B;
+    overflow: scroll;
 }
 
 .header {
@@ -295,5 +308,10 @@ export default {
 
 .button_woman {
     background-color: #EF7943;
+}
+
+.button_enqete {
+    background-color: #EF7943;
+    width: calc(100% - 40px);
 }
 </style>
