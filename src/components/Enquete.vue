@@ -22,30 +22,32 @@
             </div>
 
             <div class="mt20" />
-            <img class="mainImage" :src="questionJSON[counter].image_path" />
+            <img 
+                v-show="questionJSON[counter].image_path" 
+                class="mainImage" 
+                :src="questionJSON[counter].image_path" 
+            />
 
             <div class="mt20" />
             <form
                 v-for="(s, i) in questionJSON[counter].selecters" 
                 :key="i"
+                v-show="questionJSON[counter].type"
             >
-              <div class="span">
-                <input :type="questionJSON[counter].type" :value="s" v-model="selectData"/>
-                <div class="ml10" />
-                <label :for="s">{{s}}</label>
-              </div>
+                <div class="mt5" />
+                <div class="span">
+                    <input :type="questionJSON[counter].type" :value="s" v-model="selectData"/>
+                    <div class="ml10" />
+                    <label :for="s">{{s}}</label>
+                </div>
             </form>
 
             <div class="mt20" />
-            <div class="bold">理由：</div>
+            <div class="bold" v-show="questionJSON[counter].type">理由：</div>
             <textarea class="input_text" wrap="soft" v-model="reason"></textarea>
 
             <div class="mt30" />
             <button @click="setCounter()" v-scroll-to="'#top'">次の質問へ</button>
-            <div>
-                {{selectData}}
-                {{reason}}
-            </div>
         </div>
   </div>
 </template>
@@ -71,7 +73,14 @@ export default {
                 "selecters" : ["強く同意する", "同意する", "どちらでもない", "同意しない", "強く同意しない"],
                 "type": "checkbox",
                 "model": "checkData",
-                "image_path": require("../assets/image.jpeg")
+                "image_path": ""
+            },
+            {
+                "mainText": "どれくらいの頻度で通知を⾏ってほしいか",
+                "selecters" : [],
+                "type": "",
+                "model": "",
+                "image_path": ""
             }
         ],
         selectData: [],
@@ -97,7 +106,8 @@ export default {
     },
     setCounter () {
         console.log(this.selectData)
-        if(this.selectData.length == 0 || !this.reason) {
+        console.log(this.reason)
+        if((this.questionJSON[this.counter].type && this.selectData.length == 0) || !this.reason) {
             this.error = true
             return
         }
