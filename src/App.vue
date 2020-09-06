@@ -21,6 +21,9 @@
       @setId="setId"
       @setPath="setPath"
     />
+    <Enquete 
+      v-if="router('enquete')"
+    />
   </div>
 </template>
 
@@ -30,6 +33,7 @@ import UserProfile from '@/components/UserProfile'
 import Quiz from '@/components/Quiz'
 import QuizEnd from '@/components/QuizEnd'
 import Ranking from '@/components/Ranking'
+import Enquete from '@/components/Enquete.vue'
 
 export default {
   name: 'App',
@@ -64,7 +68,8 @@ export default {
     UserProfile,
     Quiz,
     QuizEnd,
-    Ranking
+    Ranking,
+    Enquete
   }
 }
 </script>
@@ -80,7 +85,7 @@ html, body, #app {
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling : touch;
   background-color: #FAFAFA;
-  overflow: scroll;
+  /*overflow: scroll;*/
 }
 
 .mt5 {
