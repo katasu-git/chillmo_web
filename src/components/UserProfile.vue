@@ -56,8 +56,7 @@
     </div>
 
     <div class="mt20" />
-    <div 
-        v-if="userLog.test_group == 2"
+    <div
         class="button button_enqete ml20"
         @click="setPath('enquete')"
     >アンケートに回答</div>
